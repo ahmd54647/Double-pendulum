@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #mian {
+            position: relative;
+            width: 1000px;
+            height: 500px;
+            border: 3px solid black;
+        }
+
+        #bull1 {
+            position: absolute;
+
+            height: 25px;
+            width: 25px;
+            background-color: black;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        #bull2 {
+            position: absolute;
+            top: 300px;
+            left: 500px;
+            height: 25px;
+            width: 25px;
+            background-color: black;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        #square {
+            position: absolute;
+            left: 465px;
+            top: 262px;
+            width: 100px;
+            height: 2px;
+            background: black;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="bull1"></div>
+    <div id="bull2"></div>
+    <div id="square"></div>
+    <div id="mian">
+        <canvas id="myCanvas" width="1000" height="500 " style="border:3px solid #d3d3d3;"></canvas>
+        <button style="position: absolute;top: 479px;left: 957px;" onclick="start()">
+            Start
+        </button>
+    </div>
+    <div class="slidecontainer" style="position: absolute;top: 15px;left: 20px;">
+        <span id="r1t">rod-1 Length: </span>
+        <input id="r1" type="range" min="1" max="100" value="100">
+        <br>
+        <span id="r2t">rod-2 Length: </span>
+        <input id="r2" type="range" min="1" max="100" value="100">
+        <br>
+        <span id="m1t">Mass1: </span>
+        <input id="m1" type="range" min="0" max="100" value="50">
+        <br>
+        <span id="m2t">Mass2: </span>
+        <input id="m2" type="range" min="0" max="100" value="50">
+        <br>
+        <span id="gt">Gravity: </span>
+        <input id="g" type="range" min="0" max="10" value="9">
+        <br>
+        <span id="an1t">Angle 1: </span>
+        <input id="an1" type="range" min="0" max="360" value="90">
+        <br>
+        <span id="an2t">Angle 2: </span>
+        <input id="an2" type="range" min="0" max="360" value="90">
+        <br>
+        <span id="tit">time interval: </span>
+        <input id="ti"  type="number" min="0.1" max="1" value="0.1">
+    </div>
+</body>
+</html>
+
+<script>
+    function degrees_to_radians(degrees) {
+        var pi = Math.PI;
+        return degrees * (pi / 180);
+    }
+    startt = 0
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    r1 = 100        //length of the rod 1
+    r2 = 100        //length of the rod 2
+    m1 = 50         //mass 1
+    m2 = 50         //mass 1
+    a1 = 90         //angle 1
+    a2 = 90         //angle 1
+    a1_v = 0        //angular velocity 1
+    a2_v = 0        //angular velocity 2
+    a1_a = 0        //angular acceleration 1
+    a2_a = 0        //angular acceleration 2
+    g = 9           //gravity
+    time = 0.1      //time interval
+
+    function values() {
+        r1 = document.getElementById("r1").value
+        document.getElementById("r1t").innerHTML = "Rod-1 Length=" + r1;
+
+        r2 = document.getElementById("r2").value
+        document.getElementById("r2t").innerHTML = "Rod-2 Length=" + r2;
+
+        m1 = document.getElementById("m1").value
+        document.getElementById("m1t").innerHTML = "Mass 1=" + m1;
+
+        m2 = document.getElementById("m2").value
+        document.getElementById("m2t").innerHTML = "Mass 2=" + m2;
+
+        g = document.getElementById("g").value
+        document.getElementById("gt").innerHTML = "Gravity=" + g;
+
+        time = document.getElementById("ti").value
+        document.getElementById("tit").innerHTML = "Time interval=";
+
+        if (startt == 0) {
+            a1 = degrees_to_radians(document.getElementById("an1").value)
+            document.getElementById("an1t").innerHTML = "Angle 1=" + document.getElementById("an1").value;
+
+            a2 = degrees_to_radians(document.getElementById("an2").value)
+            document.getElementById("an2t").innerHTML = "Angle 2=" + document.getElementById("an2").value;
+            
+        a1_a = (g * (Math.sin(a2) * Math.cos(a1 - a2) - (1 + m1 / m2) * Math.sin(a1)) - (r2 * a2_v * a2_v + r1 * a1_v * a1_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r1 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2)));
+        a2_a = ((1 + m1 / m2) * g * (Math.sin(a1) * Math.cos(a1 - a2) - Math.sin(a2)) + ((1 + m1 / m2) * r1 * a1_v * a1_v + r2 * a2_v * a2_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r2 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2)));
+        }
+        ctx.clearRect(0, 0, 1000, 500);
+
+        //drawing and relocating shapes
+        x1 = r1 * Math.sin(a1);
+        y1 = r1 * Math.cos(a1);
+        x2 = x1 + r2 * Math.sin(a2);
+        y2 = y1 + r2 * Math.cos(a2);
+        document.getElementById("bull1").style.left = x1 + 500 + "px";
+        document.getElementById("bull1").style.top = y1 + 250 + "px";
+
+        document.getElementById("bull2").style.left = x2 + 500 + "px";
+        document.getElementById("bull2").style.top = y2 + 250 + "px";
+
+        ctx.beginPath();                   
+        ctx.moveTo(500, 250);
+        ctx.lineTo(x1 + 500, y1 + 250);
+        ctx.moveTo(x1 + 500, y1 + 250);
+        ctx.lineTo(x2 + 500, y2 + 250);
+        ctx.stroke();
+    }
+
+    function calculate() {
+        a1_a = (g * (Math.sin(a2) * Math.cos(a1 - a2) - (1 + m1 / m2) * Math.sin(a1)) - (r2 * a2_v * a2_v + r1 * a1_v * a1_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r1 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))); //calculting angular acceleration 1
+        a2_a = ((1 + m1 / m2) * g * (Math.sin(a1) * Math.cos(a1 - a2) - Math.sin(a2)) + ((1 + m1 / m2) * r1 * a1_v * a1_v + r2 * a2_v * a2_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r2 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))); //calculting angular acceleration 2
+        
+        a1_v += a1_a * time;    //iterating over time
+        a2_v += a2_a * time;
+        a1 += a1_v * time;
+        a2 += a2_v * time;
+    }
+    window.setInterval(values, 10)
+    function start() {
+        window.setInterval(calculate, 10)
+        startt = 1;
+    }
+   
+</script>
