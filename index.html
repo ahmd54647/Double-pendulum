@@ -64,10 +64,10 @@
         <input id="r2" type="range" min="1" max="100" value="100">
         <br>
         <span id="m1t">Mass1: </span>
-        <input id="m1" type="range" min="0" max="100" value="50">
+        <input id="m1" type="range" min="1" max="100" value="50">
         <br>
         <span id="m2t">Mass2: </span>
-        <input id="m2" type="range" min="0" max="100" value="50">
+        <input id="m2" type="range" min="1" max="100" value="50">
         <br>
         <span id="gt">Gravity: </span>
         <input id="g" type="range" min="0" max="10" value="9">
@@ -83,7 +83,6 @@
     </div>
 </body>
 </html>
-
 <script>
     function degrees_to_radians(degrees) {
         var pi = Math.PI;
@@ -156,7 +155,9 @@
     }
 
     function calculate() {
-        a1_a = (g * (Math.sin(a2) * Math.cos(a1 - a2) - (1 + m1 / m2) * Math.sin(a1)) - (r2 * a2_v * a2_v + r1 * a1_v * a1_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r1 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))); //calculting angular acceleration 1
+        console.log(a2_a = ((1 + m1 / m2) * g * (Math.sin(a1) * Math.cos(a1 - a2) - Math.sin(a2)) + ((1 + m1 / m2) * r1 * a1_v * a1_v + r2 * a2_v * a2_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r2 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))))
+		console.log(a1_a = (g * (Math.sin(a2) * Math.cos(a1 - a2) - (1 + m1 / m2) * Math.sin(a1)) - (r2 * a2_v * a2_v + r1 * a1_v * a1_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r1 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))))
+		a1_a = (g * (Math.sin(a2) * Math.cos(a1 - a2) - (1 + m1 / m2) * Math.sin(a1)) - (r2 * a2_v * a2_v + r1 * a1_v * a1_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r1 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))); //calculting angular acceleration 1
         a2_a = ((1 + m1 / m2) * g * (Math.sin(a1) * Math.cos(a1 - a2) - Math.sin(a2)) + ((1 + m1 / m2) * r1 * a1_v * a1_v + r2 * a2_v * a2_v * Math.cos(a1 - a2)) * Math.sin(a1 - a2)) / (r2 * ((1 + m1 / m2) - Math.cos(a1 - a2) * Math.cos(a1 - a2))); //calculting angular acceleration 2
         
         a1_v += a1_a * time;    //iterating over time
